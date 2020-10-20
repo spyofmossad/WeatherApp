@@ -21,6 +21,7 @@
 		0AA6A1D8246A9C390079FE44 /* ExtensionUiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA6A1D7246A9C390079FE44 /* ExtensionUiView.swift */; };
 		0AC941522469A81300DD692E /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC941512469A81300DD692E /* Location.swift */; };
 		0AC941542469DA0200DD692E /* ExtensionDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC941532469DA0200DD692E /* ExtensionDate.swift */; };
+		0ADBDC75253F361E00591AC3 /* ViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADBDC74253F361E00591AC3 /* ViewController+Extension.swift */; };
 		0AE867A8246810B700D2E626 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE867A7246810B700D2E626 /* WeatherData.swift */; };
 		0AE867AA246810CB00D2E626 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE867A9246810CB00D2E626 /* NetworkManager.swift */; };
 		0AE867AC24681AE800D2E626 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE867AB24681AE800D2E626 /* CollectionViewCell.swift */; };
@@ -48,6 +49,7 @@
 		0AA6A1D7246A9C390079FE44 /* ExtensionUiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionUiView.swift; sourceTree = "<group>"; };
 		0AC941512469A81300DD692E /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		0AC941532469DA0200DD692E /* ExtensionDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDate.swift; sourceTree = "<group>"; };
+		0ADBDC74253F361E00591AC3 /* ViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Extension.swift"; sourceTree = "<group>"; };
 		0AE867A7246810B700D2E626 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		0AE867A9246810CB00D2E626 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		0AE867AB24681AE800D2E626 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				0AE867B52468401E00D2E626 /* ExtensionDictionary.swift */,
 				0AC941532469DA0200DD692E /* ExtensionDate.swift */,
 				0AA6A1D3246A87830079FE44 /* ExtensionLoopable.swift */,
+				0ADBDC74253F361E00591AC3 /* ViewController+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -174,7 +177,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1140;
-				LastUpgradeCheck = 1140;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = Dmitry;
 				TargetAttributes = {
 					0A32E32E2466ACF40042236E = {
@@ -226,6 +229,7 @@
 				0A60AAE7246997E4005554FB /* LocationManager.swift in Sources */,
 				0AA6A1D4246A87830079FE44 /* ExtensionLoopable.swift in Sources */,
 				0A32E3332466ACF40042236E /* AppDelegate.swift in Sources */,
+				0ADBDC75253F361E00591AC3 /* ViewController+Extension.swift in Sources */,
 				0AE867B62468401E00D2E626 /* ExtensionDictionary.swift in Sources */,
 				0A60AAE224698AAF005554FB /* ImageView.swift in Sources */,
 				0AE867BE24685A2600D2E626 /* StorageDataManager.swift in Sources */,
@@ -288,6 +292,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -348,6 +353,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

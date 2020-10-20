@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -263,37 +263,19 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Stn-nF-lbr"/>
                                 </connections>
                             </scrollView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hT1-B9-Jd5">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                                <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="Vwb-rs-57t">
-                                        <rect key="frame" x="169" y="387.66666666666669" width="37" height="37"/>
-                                        <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </activityIndicatorView>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <constraints>
-                                    <constraint firstItem="Vwb-rs-57t" firstAttribute="centerY" secondItem="hT1-B9-Jd5" secondAttribute="centerY" id="FCa-AP-c4I"/>
-                                    <constraint firstItem="Vwb-rs-57t" firstAttribute="centerX" secondItem="hT1-B9-Jd5" secondAttribute="centerX" id="uIc-sR-JnL"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="x1f-Aa-Z5j" firstAttribute="top" secondItem="Isc-7X-lTe" secondAttribute="top" id="2LD-lY-vO3"/>
                             <constraint firstItem="qP7-ZI-PwS" firstAttribute="leading" secondItem="x1f-Aa-Z5j" secondAttribute="leading" id="7w6-BV-jVo"/>
                             <constraint firstItem="x1f-Aa-Z5j" firstAttribute="trailing" secondItem="Isc-7X-lTe" secondAttribute="trailing" id="F5E-19-LPu"/>
-                            <constraint firstItem="hT1-B9-Jd5" firstAttribute="leading" secondItem="x1f-Aa-Z5j" secondAttribute="leading" id="Lgn-OL-mK8"/>
                             <constraint firstItem="Isc-7X-lTe" firstAttribute="bottom" secondItem="x1f-Aa-Z5j" secondAttribute="bottom" id="UlQ-Dg-552"/>
                             <constraint firstItem="POw-dC-mlT" firstAttribute="leading" secondItem="x1f-Aa-Z5j" secondAttribute="leading" id="V7l-bh-TK7"/>
-                            <constraint firstItem="hT1-B9-Jd5" firstAttribute="top" secondItem="x1f-Aa-Z5j" secondAttribute="top" constant="-44" id="Xi0-0l-6j8"/>
                             <constraint firstItem="F03-7N-ldC" firstAttribute="centerX" secondItem="x1f-Aa-Z5j" secondAttribute="centerX" id="bE7-tI-hIX"/>
                             <constraint firstItem="Isc-7X-lTe" firstAttribute="leading" secondItem="x1f-Aa-Z5j" secondAttribute="leading" id="e1q-gl-sIH"/>
                             <constraint firstItem="POw-dC-mlT" firstAttribute="top" secondItem="x1f-Aa-Z5j" secondAttribute="top" id="g8k-Uo-NQS"/>
                             <constraint firstItem="x1f-Aa-Z5j" firstAttribute="trailing" secondItem="qP7-ZI-PwS" secondAttribute="trailing" id="pez-1e-mJ3"/>
                             <constraint firstItem="x1f-Aa-Z5j" firstAttribute="trailing" secondItem="POw-dC-mlT" secondAttribute="trailing" id="rOz-As-u5F"/>
-                            <constraint firstItem="x1f-Aa-Z5j" firstAttribute="bottom" secondItem="hT1-B9-Jd5" secondAttribute="bottom" constant="-34" id="ywE-b8-lkk"/>
-                            <constraint firstItem="x1f-Aa-Z5j" firstAttribute="trailing" secondItem="hT1-B9-Jd5" secondAttribute="trailing" id="z3t-hB-SBn"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="x1f-Aa-Z5j"/>
                     </view>
@@ -304,7 +286,6 @@
                         <outlet property="detailForecast" destination="VBl-3q-Utw" id="D51-QZ-tax"/>
                         <outlet property="headerView" destination="POw-dC-mlT" id="KgH-bo-bXv"/>
                         <outlet property="headerViewHeight" destination="9eC-SJ-ndw" id="kPy-B8-tIe"/>
-                        <outlet property="loaderView" destination="hT1-B9-Jd5" id="2bp-pX-3hR"/>
                         <outlet property="scrollViewTopOffset" destination="4Pz-02-gYG" id="3xK-Eg-UzV"/>
                         <outlet property="shortDesc" destination="ZaC-ci-MzW" id="Yia-16-xSK"/>
                         <outlet property="tableContainerHeight" destination="Y02-ym-nsF" id="dUc-kZ-jRu"/>

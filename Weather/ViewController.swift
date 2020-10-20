@@ -26,7 +26,6 @@ class ViewController: UIViewController {
     @IBOutlet var city: UILabel!
     @IBOutlet var shortDesc: UILabel!
     @IBOutlet var temp: UILabel!
-    @IBOutlet var loaderView: UIView!
     
     let headerViewConstant: CGFloat = 300
         
@@ -35,6 +34,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.showSpinner()
         getDataFromStorageIfAvailable()
         getDataByLocation()
         recalculateSizes()
@@ -49,7 +49,7 @@ class ViewController: UIViewController {
                     guard let weatherData = self.weatherData else { return }
                     self.prepareView(with: weatherData, for: location.city)                    
                     StorageDataManager.shared.saveWeatherData(weather: weatherData);
-                    self.disableLoader()
+                    self.removeSpinner()
                 }
             }
         }
@@ -61,7 +61,7 @@ class ViewController: UIViewController {
             detailsData = weatherData?.getDailyDetails()
             prepareView(with: data, for: nil)
             recalculateSizes()
-            disableLoader()
+            self.removeSpinner()
         }
     }
     
@@ -83,10 +83,6 @@ class ViewController: UIViewController {
         scrollViewTopOffset.constant = headerView.bounds.height + collectionView.bounds.height
         
         tableContainerHeight.constant = detailForecast.bounds.height + weekForecastTable.bounds.height + headerView.bounds.height + collectionView.bounds.height
-    }
-    
-    func disableLoader() {
-        self.loaderView.isHidden = true
     }
 }
 
