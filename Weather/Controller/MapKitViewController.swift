@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController {
+class MapKitViewController: UIViewController {
     
     var location: CLLocation?
     var completionHandler: ((CLLocation)->())?

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="uG6-Gb-Dbl">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -236,7 +236,7 @@
                                                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                                 <state key="normal" image="mappin.and.ellipse" catalog="system"/>
                                                                 <connections>
-                                                                    <segue destination="j25-Hv-AWY" kind="presentation" identifier="openMap" id="f7m-AY-oZw"/>
+                                                                    <action selector="buttonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bxh-r7-sQS"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
@@ -295,6 +295,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="8lc-gw-6Mx"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="city" destination="elI-aN-n54" id="cjw-Kf-NNl"/>
                         <outlet property="collectionView" destination="Vrm-Ww-ulg" id="R5Y-ZH-4fB"/>
@@ -307,35 +308,45 @@
                         <outlet property="tableContainerHeight" destination="Y02-ym-nsF" id="dUc-kZ-jRu"/>
                         <outlet property="temp" destination="NiR-0U-tys" id="PRQ-sm-zSb"/>
                         <outlet property="weekForecastTable" destination="Sa5-mQ-Gjk" id="zcf-Dq-lLq"/>
+                        <segue destination="j25-Hv-AWY" kind="presentation" identifier="openNativeMap" id="boT-5B-gKU"/>
+                        <segue destination="OVi-xw-aq5" kind="presentation" identifier="openGoogleMap" id="HG8-fL-cFh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1080.8" y="126.35467980295567"/>
+            <point key="canvasLocation" x="2023.2" y="126.35467980295567"/>
         </scene>
-        <!--Map View Controller-->
+        <!--Map Kit View Controller-->
         <scene sceneID="9Mw-IR-0Ro">
             <objects>
-                <viewController id="j25-Hv-AWY" customClass="MapViewController" customModule="Weather" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="j25-Hv-AWY" customClass="MapKitViewController" customModule="Weather" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qp9-PP-O8P">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="HXz-OR-V2a">
-                                <rect key="frame" x="0.0" y="10" width="375" height="714"/>
+                                <rect key="frame" x="0.0" y="37" width="375" height="687"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="GSi-lz-vw4" appends="YES" id="vyP-NX-5uW"/>
                                 </connections>
                             </mapView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MapKit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SnE-gu-iX3">
+                                <rect key="frame" x="160.66666666666666" y="8" width="53.666666666666657" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="BcC-0p-0fW"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="HXz-OR-V2a" firstAttribute="top" secondItem="BcC-0p-0fW" secondAttribute="top" constant="10" id="5xf-05-1ED"/>
-                            <constraint firstItem="BcC-0p-0fW" firstAttribute="trailing" secondItem="HXz-OR-V2a" secondAttribute="trailing" id="QuN-8O-Odc"/>
-                            <constraint firstItem="BcC-0p-0fW" firstAttribute="bottom" secondItem="HXz-OR-V2a" secondAttribute="bottom" id="TIb-RQ-DfQ"/>
-                            <constraint firstItem="HXz-OR-V2a" firstAttribute="leading" secondItem="BcC-0p-0fW" secondAttribute="leading" id="b0O-7S-hx8"/>
+                            <constraint firstItem="HXz-OR-V2a" firstAttribute="bottom" secondItem="BcC-0p-0fW" secondAttribute="bottom" id="3Op-31-2mw"/>
+                            <constraint firstItem="HXz-OR-V2a" firstAttribute="top" secondItem="SnE-gu-iX3" secondAttribute="bottom" constant="8" id="6gQ-9Q-gZV"/>
+                            <constraint firstItem="SnE-gu-iX3" firstAttribute="top" secondItem="BcC-0p-0fW" secondAttribute="top" constant="8" id="7Gn-o2-dFy"/>
+                            <constraint firstItem="HXz-OR-V2a" firstAttribute="trailing" secondItem="BcC-0p-0fW" secondAttribute="trailing" id="Cgk-Oy-b4I"/>
+                            <constraint firstItem="SnE-gu-iX3" firstAttribute="centerX" secondItem="qp9-PP-O8P" secondAttribute="centerX" id="TE0-PI-w8R"/>
+                            <constraint firstItem="HXz-OR-V2a" firstAttribute="leading" secondItem="BcC-0p-0fW" secondAttribute="leading" id="nWs-Hk-uVb"/>
                         </constraints>
                     </view>
                     <connections>
@@ -349,7 +360,41 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1844" y="126"/>
+            <point key="canvasLocation" x="2871.1999999999998" y="-259.35960591133005"/>
+        </scene>
+        <!--Google Maps View Controller-->
+        <scene sceneID="Sjq-Lw-lGc">
+            <objects>
+                <viewController id="OVi-xw-aq5" customClass="GoogleMapsViewController" customModule="Weather" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZWp-Gt-3Pa">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="WUo-oB-PVf"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N3Q-yP-V0E" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2871.1999999999998" y="445.56650246305418"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="VDB-TB-UkB">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="uG6-Gb-Dbl" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="91c-zu-Sd3">
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="jKm-Hm-Xfu"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="q1d-oh-Ol9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1080.8" y="126.35467980295567"/>
         </scene>
     </scenes>
     <resources>

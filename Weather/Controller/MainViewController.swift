@@ -27,6 +27,20 @@ class MainViewController: UIViewController {
     @IBOutlet var shortDesc: UILabel!
     @IBOutlet var temp: UILabel!
     
+    @IBAction func buttonTapped(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Open map", message: "Select map SDK", preferredStyle: .alert)
+        let mapKitAction = UIAlertAction(title: "Open MapKit", style: .default) { (_) in
+            self.performSegue(withIdentifier: "openNativeMap", sender: nil)
+        }
+        let googleMapAction = UIAlertAction(title: "Open Google maps", style: .default) { (_) in
+            self.performSegue(withIdentifier: "openGoogleMap", sender: nil)
+        }
+        alert.addAction(mapKitAction)
+        alert.addAction(googleMapAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
     let headerViewConstant: CGFloat = 300
         
     var weatherData: WeatherData?
@@ -79,8 +93,18 @@ class MainViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "openMap" {
-            let mapVC = segue.destination as! MapViewController
+        if segue.identifier == "openNativeMap" {
+            let mapVC = segue.destination as! MapKitViewController
+            guard let location = location else { return }
+            mapVC.location = location
+            mapVC.completionHandler = { [weak self] (location) in
+                guard let self = self else { return }
+                self.location = location
+                self.getPlaceAndWeather(for: location)
+            }
+        }
+        if segue.identifier == "openGoogleMap" {
+            let mapVC = segue.destination as! GoogleMapsViewController
             guard let location = location else { return }
             mapVC.location = location
             mapVC.completionHandler = { [weak self] (location) in
