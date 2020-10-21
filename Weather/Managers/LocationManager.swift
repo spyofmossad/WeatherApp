@@ -12,11 +12,11 @@ import MapKit
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
     
-    static let shared = LocationManager()
-    
     private let locationManager = CLLocationManager();
     
-    var locationUpdated: ((_ location: Location) -> ())?
+    var locationUpdated: ((_ location: CLLocation) -> ())?
+    
+    static let shared = LocationManager()
     
     private override init() {
         super.init()
@@ -32,15 +32,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
             print("Got to user's location successfully")
-            getCity(for: location) { city in
-                let loc = Location(
-                    city: city,
-                    latitude: location.coordinate.latitude,
-                    longitude: location.coordinate.longitude)
-                self.locationUpdated?(loc)
-                self.locationManager.stopUpdatingLocation()
-            }
-            
+            self.locationManager.stopUpdatingLocation()
+            self.locationUpdated?(location)
         }
     }
 
@@ -48,14 +41,14 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         print("Failed to find user's location: \(error.localizedDescription)")
     }
     
-    private func getCity(for location: CLLocation, completion: @escaping ((String) -> Void)) {
-        let address = CLGeocoder.init()
-        address.reverseGeocodeLocation(CLLocation.init(latitude: location.coordinate.latitude, longitude:location.coordinate.longitude)) { (places, error) in
-                if error == nil{
-                    if let place = places{
-                        completion("\(place.first?.locality ?? "Unknown")")
-                    }
+    func getPlace(for location: CLLocation, completion: @escaping ((String) -> Void)) {
+        let address = CLGeocoder()
+        address.reverseGeocodeLocation(location) { (places, error) in
+            if error == nil{
+                if let place = places{
+                    completion("\(place.first?.locality ?? "Unknown")")
                 }
+            }
         }
     }
 }

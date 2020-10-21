@@ -11,19 +11,15 @@ import CoreLocation
 
 class NetworkManager {
     
-    static let shared = NetworkManager()
-    
-    private init() {}
-    
-    func fetchData(for location: Location, completion: @escaping (WeatherData) -> ()) {
+    static func fetchData(for location: CLLocation, completion: @escaping (WeatherData) -> ()) {
                         
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "api.openweathermap.org"
         urlComponents.path = "/data/2.5/onecall"
         urlComponents.queryItems = [
-            URLQueryItem(name: "lat", value: String(location.latitude)),
-            URLQueryItem(name: "lon", value: String(location.longitude)),
+            URLQueryItem(name: "lat", value: String(location.coordinate.latitude)),
+            URLQueryItem(name: "lon", value: String(location.coordinate.longitude)),
             URLQueryItem(name: "units", value: "metric"),
             URLQueryItem(name: "appid", value: "9549c560f4513bc71baa58ed687b10aa")
         ]

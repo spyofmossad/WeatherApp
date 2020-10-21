@@ -22,12 +22,12 @@ class ImageView: UIImageView {
             DispatchQueue.main.async {
                 self.image = UIImage(data: data)
             }
-            StorageDataManager.shared.saveData(data: data, with: id)
+            StorageDataManager.saveData(data: data, with: id)
         }
     }
     
     private func getCachedImage(by id: String) -> UIImage? {
-        if let cachedData = StorageDataManager.shared.getData(by: id) {
+        if let cachedData = StorageDataManager.getData(by: id) {
             return UIImage(data: cachedData)
         }
         return nil

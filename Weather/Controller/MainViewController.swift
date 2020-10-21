@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
 
     @IBOutlet var headerViewHeight: NSLayoutConstraint!
     @IBOutlet var scrollViewTopOffset: NSLayoutConstraint!
@@ -32,31 +32,24 @@ class ViewController: UIViewController {
     var weatherData: WeatherData?
     var detailsData: [String : Any]?
     
+    private var location: CLLocation?
+    private var place: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.showSpinner()
         getDataFromStorageIfAvailable()
-        getDataByLocation()
-        recalculateSizes()
-    }
         
-    func getDataByLocation() {
-        LocationManager.shared.locationUpdated = { location in
-            NetworkManager.shared.fetchData(for: location) { (data) in
-                DispatchQueue.main.async {
-                    self.weatherData = data
-                    self.detailsData = self.weatherData?.getDailyDetails()
-                    guard let weatherData = self.weatherData else { return }
-                    self.prepareView(with: weatherData, for: location.city)                    
-                    StorageDataManager.shared.saveWeatherData(weather: weatherData);
-                    self.removeSpinner()
-                }
-            }
+        LocationManager.shared.locationUpdated = { [weak self] location in
+            guard let self = self else { return }
+            self.location = location
+            self.getPlaceAndWeather(for: location)
+            self.recalculateSizes()
         }
     }
     
     func getDataFromStorageIfAvailable() {
-        if let data = StorageDataManager.shared.getWeatherData() {
+        if let data = StorageDataManager.getWeatherData() {
             weatherData = data
             detailsData = weatherData?.getDailyDetails()
             prepareView(with: data, for: nil)
@@ -84,9 +77,41 @@ class ViewController: UIViewController {
         
         tableContainerHeight.constant = detailForecast.bounds.height + weekForecastTable.bounds.height + headerView.bounds.height + collectionView.bounds.height
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "openMap" {
+            let mapVC = segue.destination as! MapViewController
+            guard let location = location else { return }
+            mapVC.location = location
+            mapVC.completionHandler = { [weak self] (location) in
+                guard let self = self else { return }
+                self.location = location
+                self.getPlaceAndWeather(for: location)
+            }
+        }
+    }
+    
+    private func getPlaceAndWeather(for location: CLLocation) {
+        LocationManager.shared.getPlace(for: location) { [weak self] (place) in
+            guard let self = self else { return }
+            self.place = place
+            
+            NetworkManager.fetchData(for: location) { [weak self] (data) in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    self.weatherData = data
+                    self.detailsData = self.weatherData?.getDailyDetails()
+                    guard let weatherData = self.weatherData else { return }
+                    self.prepareView(with: weatherData, for: place)
+                    StorageDataManager.saveWeatherData(weather: weatherData);
+                }
+            }
+        }
+
+    }
 }
 
-extension ViewController: UIScrollViewDelegate {
+extension MainViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let offsetY = scrollView.contentOffset.y
@@ -105,7 +130,8 @@ extension ViewController: UIScrollViewDelegate {
     }
 }
 
-extension ViewController: UITableViewDataSource {
+extension MainViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case weekForecastTable:
@@ -137,7 +163,7 @@ extension ViewController: UITableViewDataSource {
     }
 }
 
-extension ViewController: UICollectionViewDataSource {
+extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let hourData = weatherData?.getHourForecast() else { return 0 }
         return hourData.count
@@ -154,7 +180,7 @@ extension ViewController: UICollectionViewDataSource {
     }
 }
 
-extension ViewController: UICollectionViewDelegateFlowLayout {
+extension MainViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.height / 2, height: collectionView.frame.height)
