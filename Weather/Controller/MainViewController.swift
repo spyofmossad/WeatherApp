@@ -69,7 +69,7 @@ class MainViewController: UIViewController {
     private func getErrorAlert(for error: Error) {
         let alert = UIAlertController(title: "Location is unavaliable", message: error.localizedDescription, preferredStyle: .alert)
         let retryAction = UIAlertAction(title: "Try again", style: .default) { _ in
-            LocationManager.shared.requestLocation()
+            LocationManager.shared.startUpdatelocation()
         }
         let defaultPlaceAction = UIAlertAction(title: "Default place (Cupertino)", style: .cancel) { _ in
             self.getPlaceAndWeather(for: self.defaultLocation)
@@ -95,10 +95,12 @@ class MainViewController: UIViewController {
     private func getPlaceAndWeather(for location: CLLocation) {
         LocationManager.shared.getPlace(for: location) { [weak self] (place) in
             guard let self = self else { return }
+            print("Got place name - \(place)")
             
             NetworkManager.fetchData(for: location) { [weak self] (data) in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
+                    print("Data fetched")
                     self.weatherData = data
                     self.detailsData = self.weatherData?.getDailyDetails()
                     guard let weatherData = self.weatherData else { return }

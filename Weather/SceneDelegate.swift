@@ -33,12 +33,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
+        LocationManager.shared.stopUpdateLocation()
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        LocationManager.shared.requestLocation()
+        LocationManager.shared.startUpdatelocation()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {

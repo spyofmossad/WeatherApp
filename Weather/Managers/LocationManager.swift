@@ -25,8 +25,14 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
     }
     
-    func requestLocation() {
-        self.locationManager.requestLocation()
+    func startUpdatelocation() {
+        self.locationManager.startUpdatingLocation()
+        print("Locating started")
+    }
+    
+    func stopUpdateLocation() {
+        self.locationManager.stopUpdatingLocation()
+        print("Locating stopped")
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
