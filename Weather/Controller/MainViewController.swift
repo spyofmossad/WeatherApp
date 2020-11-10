@@ -194,7 +194,7 @@ extension MainViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "detailsCell", for: indexPath) as! DetailsTableViewCell
             guard let detailsData = detailsData else { return cell }
             let title = detailsData[indexPath.row].key.toCellTitle()
-            let subtitle = convertSubtitle(by: detailsData[indexPath.row].key, subtitle: detailsData[indexPath.row].value)
+            let subtitle = convertSubtitle(kvPair: detailsData[indexPath.row])
             cell.prepare(title: title, subtitle: subtitle)
             return cell
         default:
@@ -235,24 +235,24 @@ extension MainViewController {
         case timestamp
     }
     
-    private func convertSubtitle(by title: String, subtitle: Any) -> String {
-        switch title {
+    private func convertSubtitle(kvPair: (key: String, value: Any)) -> String {
+        switch kvPair.key {
         case DetailProperty.sunriseTime.rawValue,
              DetailProperty.sunsetTime.rawValue,
              DetailProperty.timestamp.rawValue:
-                guard let unixTimestamp = subtitle as? Int else { return "N/A" }
+            guard let unixTimestamp = kvPair.value as? Int else { return "N/A" }
                 let date = DateHelper.shared.formatDate(from: unixTimestamp, to: .hoursMinutesSeconds)
                 return date
         case DetailProperty.temperature.rawValue,
              DetailProperty.feelsLike.rawValue,
              DetailProperty.dewPoint.rawValue:
-                return "\(String(subtitle as! Double)) C°"
+                return "\(String(kvPair.value as! Double)) C°"
         default:
-            switch subtitle {
+            switch kvPair.value {
             case is Double:
-                return String(subtitle as! Double)
+                return String(kvPair.value as! Double)
             case is Int:
-                return String(subtitle as! Int)
+                return String(kvPair.value as! Int)
             default:
                 return "N/A"
             }
