@@ -12,18 +12,15 @@ var pView: UIView?
 
 extension UIViewController {
     func showSpinner() {
+        let placeholderView = UIView(frame: self.view.bounds)
+        placeholderView.backgroundColor = .white
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.startAnimating()
+        activityIndicator.center = placeholderView.center
+        placeholderView.addSubview(activityIndicator)
+        
         DispatchQueue.main.async {
-            if let pView = pView {
-                pView.removeFromSuperview()
-            }
-            let placeholderView = UIView(frame: self.view.bounds)
-            placeholderView.backgroundColor = .white
-            let activityIndicator = UIActivityIndicatorView(style: .medium)
-            activityIndicator.startAnimating()
-            activityIndicator.center = placeholderView.center
-            placeholderView.addSubview(activityIndicator)
             self.view.addSubview(placeholderView)
-            
             pView = placeholderView
         }
     }
@@ -34,4 +31,6 @@ extension UIViewController {
             pView = nil
         }
     }
+    
+    
 }

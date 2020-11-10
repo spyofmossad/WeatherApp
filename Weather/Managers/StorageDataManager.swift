@@ -12,20 +12,27 @@ class StorageDataManager {
     
     static func saveWeatherData(weather: WeatherData) {
         do {
-            let weatherJson = try JSONEncoder().encode(weather)
-            UserDefaults.standard.set(weatherJson, forKey: "weatherJson")
-        } catch let jsonError {
-            print(jsonError.localizedDescription)
+            let weatherData = try JSONEncoder().encode(weather)
+            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+            if let documentDirectory = documentDirectory {
+                let path = documentDirectory.appendingPathComponent("weatherData")
+                try weatherData.write(to: path)
+            }
+                        
+        } catch let dataError {
+            print(dataError.localizedDescription)
         }
     }
     
     static func getWeatherData() -> WeatherData? {
-        if let weather = UserDefaults.standard.value(forKey: "weatherJson") {
+        if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let url = documentDirectory.appendingPathComponent("weatherData")
             do {
-                let weatherData = try JSONDecoder().decode(WeatherData.self, from: weather as! Data)
-                return weatherData
-            } catch let jsonError {
-                print(jsonError.localizedDescription)
+                let data = try Data(contentsOf: url)
+                let weather = try JSONDecoder().decode(WeatherData.self, from: data)
+                return weather
+            } catch let error {
+                print(error.localizedDescription)
             }
         }
         return nil

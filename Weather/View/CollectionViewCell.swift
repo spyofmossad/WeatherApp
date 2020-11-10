@@ -14,18 +14,9 @@ class CollectionViewCell: UICollectionViewCell {
     @IBOutlet var icon: ImageView!
     @IBOutlet var temp: UILabel!
     
-    
     func prepare(with hourDetails: Hourly) {
-        
-        hour.text = formatDate(from: hourDetails.dt)
-        temp.text = String(hourDetails.temp.rounded(toPlaces: 1))
+        hour.text = DateHelper.shared.formatDate(from: hourDetails.timestamp, to: .hours)
+        temp.text = String(hourDetails.temperature.rounded(toPlaces: 1))
         icon.fetchImage(by: hourDetails.weather.first?.icon)
-    }
-    
-    func formatDate(from unixInt: Int) -> String {
-        let date = Date(timeIntervalSince1970: Double(unixInt))
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH"
-        return dateFormatter.string(from: date)
     }
 }

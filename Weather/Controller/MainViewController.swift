@@ -40,56 +40,90 @@ class MainViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    
-    let headerViewConstant: CGFloat = 300
-        
-    var weatherData: WeatherData?
-    var detailsData: [String : Any]?
-    
+    private let headerViewConstant: CGFloat = 300
+    private let defaultLocation = CLLocation(latitude: 37.3230, longitude: -122.0322)
+    private var weatherData: WeatherData?
+    private var detailsData: [String : Any]?
     private var location: CLLocation?
-    private var place: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.showSpinner()
-        getDataFromStorageIfAvailable()
+        getLastDataSnapshotFromStorage()
         
-        LocationManager.shared.locationUpdated = { [weak self] location in
+        LocationManager.shared.locationUpdated = { [weak self] result in
             guard let self = self else { return }
-            self.location = location
-            self.getPlaceAndWeather(for: location)
-            self.recalculateSizes()
+            
+            switch result {
+            case .success(let location):
+                self.location = location
+                self.getPlaceAndWeather(for: location)
+                self.recalculateSizes()
+                self.removeSpinner()
+            case .failure(let error):
+                self.getErrorAlert(for: error)
+            }
         }
     }
     
-    func getDataFromStorageIfAvailable() {
-        if let data = StorageDataManager.getWeatherData() {
-            weatherData = data
-            detailsData = weatherData?.getDailyDetails()
-            prepareView(with: data, for: nil)
-            recalculateSizes()
-            self.removeSpinner()
+    private func getErrorAlert(for error: Error) {
+        let alert = UIAlertController(title: "Location is unavaliable", message: error.localizedDescription, preferredStyle: .alert)
+        let retryAction = UIAlertAction(title: "Try again", style: .default) { _ in
+            LocationManager.shared.requestLocation()
+        }
+        let defaultPlaceAction = UIAlertAction(title: "Default place (Cupertino)", style: .cancel) { _ in
+            self.getPlaceAndWeather(for: self.defaultLocation)
+        }
+        alert.addAction(retryAction)
+        alert.addAction(defaultPlaceAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func getLastDataSnapshotFromStorage() {
+        guard let data = StorageDataManager.getWeatherData() else { assertionFailure("Failed to get weather data"); return }
+        let location = CLLocation(latitude: data.latitude, longitude: data.longitude)
+        LocationManager.shared.getPlace(for: location) { [weak self] (place) in
+                guard let self = self else { return }
+                self.weatherData = data
+                self.detailsData = self.weatherData?.getDailyDetails()
+                self.updateUI(with: data, for: place)
+                self.recalculateSizes()
+                self.removeSpinner()
+            }
+    }
+    
+    private func getPlaceAndWeather(for location: CLLocation) {
+        LocationManager.shared.getPlace(for: location) { [weak self] (place) in
+            guard let self = self else { return }
+            
+            NetworkManager.fetchData(for: location) { [weak self] (data) in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    self.weatherData = data
+                    self.detailsData = self.weatherData?.getDailyDetails()
+                    guard let weatherData = self.weatherData else { return }
+                    self.updateUI(with: weatherData, for: place)
+                    StorageDataManager.saveWeatherData(weather: weatherData);
+                }
+            }
         }
     }
     
-    func prepareView(with weather: WeatherData, for city: String?) {
-        if let city = city {
-            self.city.text = city
-        }
-        shortDesc.text = "\(weather.current.weather.first?.main ?? "") (\(weather.current.weather.first?.weatherDescription ?? ""))"
-        temp.text = "\(String(weather.current.temp.rounded(toPlaces: 1)))°"
+    private func updateUI(with weather: WeatherData, for city: String) {
+        self.city.text = city
+        shortDesc.text = "\(weather.currentWeather.other.first?.mainDescription ?? "") (\(weather.currentWeather.other.first?.detailDescription ?? ""))"
+        temp.text = "\(String(weather.currentWeather.temperature.rounded(toPlaces: 1)))°"
         collectionView.reloadData()
         detailForecast.reloadData()
         weekForecastTable.reloadData()
+    }
+    
+    private func recalculateSizes() {
+        scrollViewTopOffset.constant = headerView.bounds.height + collectionView.bounds.height
+        tableContainerHeight.constant = detailForecast.bounds.height + weekForecastTable.bounds.height + headerView.bounds.height + collectionView.bounds.height
         
         collectionViewContainer.addTopBorder(color: .lightGray, thickness: 1)
         collectionViewContainer.addBottomBorder(color: .lightGray, thickness: 1)
-    }
-    
-    func recalculateSizes() {
-        scrollViewTopOffset.constant = headerView.bounds.height + collectionView.bounds.height
-        
-        tableContainerHeight.constant = detailForecast.bounds.height + weekForecastTable.bounds.height + headerView.bounds.height + collectionView.bounds.height
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -114,25 +148,6 @@ class MainViewController: UIViewController {
             }
         }
     }
-    
-    private func getPlaceAndWeather(for location: CLLocation) {
-        LocationManager.shared.getPlace(for: location) { [weak self] (place) in
-            guard let self = self else { return }
-            self.place = place
-            
-            NetworkManager.fetchData(for: location) { [weak self] (data) in
-                guard let self = self else { return }
-                DispatchQueue.main.async {
-                    self.weatherData = data
-                    self.detailsData = self.weatherData?.getDailyDetails()
-                    guard let weatherData = self.weatherData else { return }
-                    self.prepareView(with: weatherData, for: place)
-                    StorageDataManager.saveWeatherData(weather: weatherData);
-                }
-            }
-        }
-
-    }
 }
 
 extension MainViewController: UIScrollViewDelegate {
@@ -155,11 +170,10 @@ extension MainViewController: UIScrollViewDelegate {
 }
 
 extension MainViewController: UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case weekForecastTable:
-            guard let dataCount = weatherData?.daily.count else { return 0 }
+            guard let dataCount = weatherData?.dailyWeather.count else { return 0 }
             return dataCount
         case detailForecast:
             guard let dataCount = detailsData?.count else { return 0 }
@@ -173,13 +187,15 @@ extension MainViewController: UITableViewDataSource {
         switch tableView {
         case weekForecastTable:
             let cell = tableView.dequeueReusableCell(withIdentifier: "weekDayCell", for: indexPath) as! TableViewCell
-            guard let dailyData = weatherData?.daily else { return cell }
+            guard let dailyData = weatherData?.dailyWeather else { return cell }
             cell.prepare(with: dailyData[indexPath.row])
             return cell
         case detailForecast:
             let cell = tableView.dequeueReusableCell(withIdentifier: "detailsCell", for: indexPath) as! DetailsTableViewCell
             guard let detailsData = detailsData else { return cell }
-            cell.prepare(title: detailsData[indexPath.row].key, subtitle: detailsData[indexPath.row].value)
+            let title = detailsData[indexPath.row].key.toCellTitle()
+            let subtitle = convertSubtitle(by: detailsData[indexPath.row].key, subtitle: detailsData[indexPath.row].value)
+            cell.prepare(title: title, subtitle: subtitle)
             return cell
         default:
             return UITableViewCell()
@@ -200,13 +216,46 @@ extension MainViewController: UICollectionViewDataSource {
         cell.prepare(with: hourData[indexPath.row])
         
         return cell
-        
     }
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.height / 2, height: collectionView.frame.height)
+    }
+}
+
+extension MainViewController {
+    enum DetailProperty: String {
+        case sunriseTime
+        case sunsetTime
+        case temperature
+        case feelsLike
+        case dewPoint
+        case timestamp
+    }
+    
+    private func convertSubtitle(by title: String, subtitle: Any) -> String {
+        switch title {
+        case DetailProperty.sunriseTime.rawValue,
+             DetailProperty.sunsetTime.rawValue,
+             DetailProperty.timestamp.rawValue:
+                guard let unixTimestamp = subtitle as? Int else { return "N/A" }
+                let date = DateHelper.shared.formatDate(from: unixTimestamp, to: .hoursMinutesSeconds)
+                return date
+        case DetailProperty.temperature.rawValue,
+             DetailProperty.feelsLike.rawValue,
+             DetailProperty.dewPoint.rawValue:
+                return "\(String(subtitle as! Double)) C°"
+        default:
+            switch subtitle {
+            case is Double:
+                return String(subtitle as! Double)
+            case is Int:
+                return String(subtitle as! Int)
+            default:
+                return "N/A"
+            }
+        }
     }
 }

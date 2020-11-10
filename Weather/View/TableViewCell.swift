@@ -16,17 +16,9 @@ class TableViewCell: UITableViewCell {
     @IBOutlet var icon: ImageView!
     
     func prepare(with dayData: Daily) {
-        weekDay.text = formatDate(from: dayData.dt)
-        minTemp.text = String(dayData.temp.min.rounded(toPlaces: 1))
-        maxTemp.text = String(dayData.temp.max.rounded(toPlaces: 1))
+        weekDay.text = DateHelper.shared.formatDate(from: dayData.timestamp, to: .weekDay)
+        minTemp.text = String(dayData.temperature.min.rounded(toPlaces: 1))
+        maxTemp.text = String(dayData.temperature.max.rounded(toPlaces: 1))
         icon.fetchImage(by: dayData.weather.first?.icon)
-    }
-    
-    private func formatDate(from unixInt: Int) -> String {
-        let date = Date(timeIntervalSince1970: Double(unixInt))
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE"
-        return dateFormatter.string(from: date)
     }
 }

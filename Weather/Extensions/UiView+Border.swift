@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 extension UIView {
-    
     func addTopBorder(color: UIColor, thickness: CGFloat) {
         let border = UIView()
         border.backgroundColor = color

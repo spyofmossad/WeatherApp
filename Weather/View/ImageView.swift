@@ -11,7 +11,10 @@ import UIKit
 class ImageView: UIImageView {
     
     func fetchImage(by id: String?) {
-        guard let id = id else { return }
+        guard let id = id else {
+            assertionFailure("Image id is nil")
+            return
+        }
         
         if let cachedImage = getCachedImage(by: id) {
             image = cachedImage

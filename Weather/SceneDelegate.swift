@@ -38,7 +38,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        LocationManager.shared.startUpdatingLocation()
+        LocationManager.shared.requestLocation()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {

@@ -1,59 +1,84 @@
 import Foundation
 
 struct WeatherData: Codable {
-    let lat, lon: Double
-    let current: WeatherDetails
-    let hourly: [Hourly]
-    let daily: [Daily]
+    let latitude, longitude: Double
+    let currentWeather: WeatherDetails
+    let hourlyWeather: [Hourly]
+    let dailyWeather: [Daily]
+    
+    enum CodingKeys: String, CodingKey {
+        case latitude = "lat"
+        case longitude = "lon"
+        case currentWeather = "current"
+        case hourlyWeather = "hourly"
+        case dailyWeather = "daily"
+    }
 }
 
 struct WeatherDetails: Codable, Loopable {
-    let dt: Int
-    let sunrise, sunset: Int?
-    let temp, feelsLike: Double
+    let timestamp: Int
+    let sunriseTime, sunsetTime: Int?
+    let temperature, feelsLike: Double
     let pressure, humidity: Int
     let dewPoint: Double
-    let uvi: Double?
+    let ultravioletIndex: Double?
     let clouds: Int
     let windSpeed: Double
-    let windDeg: Int
-    let weather: [Weather]
+    let windDegrees: Int
+    let other: [Weather]
 
     enum CodingKeys: String, CodingKey {
-        case dt, sunrise, sunset, temp
+        case timestamp = "dt"
+        case sunriseTime = "sunrise"
+        case sunsetTime = "sunset"
+        case temperature = "temp"
         case feelsLike = "feels_like"
         case pressure, humidity
         case dewPoint = "dew_point"
-        case uvi, clouds
+        case ultravioletIndex = "uvi"
+        case clouds
         case windSpeed = "wind_speed"
-        case windDeg = "wind_deg"
-        case weather
+        case windDegrees = "wind_deg"
+        case other = "weather"
     }
 }
 
 struct Weather: Codable {
-    let main: String
-    let weatherDescription: String
+    let mainDescription: String
+    let detailDescription: String
     let icon: String
 
     enum CodingKeys: String, CodingKey {
-        case main
-        case weatherDescription = "description"
+        case mainDescription = "main"
+        case detailDescription = "description"
         case icon
     }
 }
 
 struct Hourly: Codable {
-    let dt: Int
-    let temp: Double
+    let timestamp: Int
+    let temperature: Double
     let weather: [Weather]
+    
+    enum CodingKeys: String, CodingKey {
+        case timestamp = "dt"
+        case temperature = "temp"
+        case weather
+    }
 }
 
 struct Daily: Codable {
-    let dt: Int
-    let temp: Temp
+    let timestamp: Int
+    let temperature: Temp
     let weather: [Weather]
     let rain: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case timestamp = "dt"
+        case temperature = "temp"
+        case weather
+        case rain
+    }
 }
 
 struct Temp: Codable {
@@ -66,13 +91,13 @@ extension WeatherData {
         let nearestHour = Date().nearestHour()
         let dayAfter = calendar.date(byAdding: .day, value: 2, to: calendar.startOfDay(for: nearestHour))!
         
-        return self.hourly.filter {
-            $0.dt >= Int(nearestHour.timeIntervalSince1970)
-                && $0.dt < Int(dayAfter.timeIntervalSince1970) }
+        return self.hourlyWeather.filter {
+            $0.timestamp >= Int(nearestHour.timeIntervalSince1970)
+                && $0.timestamp < Int(dayAfter.timeIntervalSince1970) }
     }
     
     func getDailyDetails() -> [String : Any] {
-        var details = self.current.allProperties()
+        var details = self.currentWeather.allProperties()
         details.removeValue(forKey: "dt")
         details.removeValue(forKey: "weather")
         return details
